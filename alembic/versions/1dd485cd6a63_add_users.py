@@ -25,15 +25,6 @@ def upgrade():
         sa.Column("is_active", sa.Boolean, default=True),
     )
 
-    op.create_table(
-        "items",
-        sa.Column("id", sa.Integer, primary_key=True, index=True),
-        sa.Column("title", sa.String(100), nullable=False, index=True),
-        sa.Column("description", sa.String(1000)),
-        sa.Column("owner_id", sa.Integer, sa.ForeignKey("users.id")),
-    )
-
 
 def downgrade():
-    op.drop_table("items")
     op.drop_table("users")
