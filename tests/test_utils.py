@@ -8,7 +8,7 @@ import models
 import uuid
 
 
-def create_user():
+def create_user() -> models.User:
     email = f"test_email{uuid.uuid4()}"
     password = "test_password"
     client = TestClient(app)
@@ -22,7 +22,7 @@ def create_user():
     return user
 
 
-def get_token(user: models.User):
+def get_token(user: models.User) -> str:
     client = TestClient(app)
     r = client.post(
         "/api/token", data={"username": user.email, "password": "test_password"}
