@@ -19,7 +19,6 @@ class User(Base):
         return hash.bcrypt.verify(password, self.hashed_password)
 
 
-
 class Item(Base):
     __tablename__ = "items"
 
