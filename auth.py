@@ -3,10 +3,16 @@ import fastapi
 import jwt
 from sqlalchemy.orm import Session
 
-import models, schemas
+import crud, models, schemas
 import fastapi.security as security
-from main import get_db, oauth2schema, JWT_SECRET
+from database import get_db
 
+import fastapi.security as security
+
+
+oauth2schema = security.OAuth2PasswordBearer(tokenUrl="/api/token")
+
+JWT_SECRET = "1283818238128381823"
 
 # Dependency
 async def get_current_user(
@@ -19,3 +25,20 @@ async def get_current_user(
         raise fastapi.HTTPException(detail="Invalid token", status_code=401)
 
     return schemas.User.from_orm(user)
+
+
+async def authenticate_user(email: str, password: str, db: Session):
+    user = crud.get_user_by_email(db, email=email)
+    if not user:
+        return False
+
+    if not user.verify_password(password=password):
+        return False
+
+    return user
+
+
+async def create_token(user: models.User):
+    user_obj = schemas.User.from_orm(user)
+    token = jwt.encode(user_obj.dict(), JWT_SECRET)
+    return dict(access_token=token, token_type="bearer")

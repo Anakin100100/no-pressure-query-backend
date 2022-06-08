@@ -6,13 +6,16 @@ from main import app
 from fastapi.testclient import TestClient
 import models
 from database import SessionLocal
-import random
+from datetime import datetime
+
+
+import test_utils
 
 
 def test_create_user():
     db = SessionLocal()
     client = TestClient(app)
-    email = f"email_that_hasnt_been_used{sum([random.choice([1,2,3,4,5,6,7,8,9]) * 10 ^ n for n in range(10)])}"
+    email = f"email_{datetime.now().strftime('%H:%M:%S:%f')}"
     number_of_users_before = db.query(models.User).count()
     response = client.post(
         "/users/",
@@ -29,15 +32,10 @@ def test_create_user():
 
 def test_create_jwt():
     client = TestClient(app)
-    email = f"email_that_hasnt_been_used{sum([random.choice([1,2,3,4,5,6,7,8,9]) * 10 ^ n for n in range(10)])}"
-    response_registration = client.post(
-        "/users/",
-        json={"email": email, "password": "test_password"},
-    )
+    user = test_utils.create_user()
     response_token = client.post(
-        "/api/token", data={"username": email, "password": "test_password"}
+        "/api/token", data={"username": user.email, "password": "test_password"}
     )
-    print(response_token.json())
     assert response_token.status_code == 200
     assert len(response_token.json()["access_token"]) > 50
     assert response_token.json()["token_type"] == "bearer"
@@ -45,13 +43,9 @@ def test_create_jwt():
 
 def test_create_jwt_with_wrong_password():
     client = TestClient(app)
-    email = f"email_that_hasnt_been_used{sum([random.choice([1,2,3,4,5,6,7,8,9]) * 10 ^ n for n in range(10)])}"
-    response_registration = client.post(
-        "/users/",
-        json={"email": email, "password": "test_password"},
-    )
+    user = test_utils.create_user()
     response_token = client.post(
-        "/api/token", data={"username": email, "password": "wrong_password"}
+        "/api/token", data={"username": user.email, "password": "wrong_password"}
     )
     print(response_token.json())
     assert response_token.json()["status_code"] == 401
