@@ -1,5 +1,6 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
+import passlib.hash as hash
 
 from database import Base
 
@@ -13,6 +14,10 @@ class User(Base):
     is_active = Column(Boolean, default=True)
 
     items = relationship("Item", back_populates="owner")
+
+    def verify_password(self, password: str):
+        return hash.bcrypt.verify(password, self.hashed_password)
+
 
 
 class Item(Base):
