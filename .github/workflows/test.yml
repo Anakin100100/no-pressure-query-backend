@@ -5,8 +5,6 @@ name: TEST
 on: [push]
 
 jobs:
-  env:
-    CI: present
   build:
     runs-on: ubuntu-latest
     strategy:
@@ -43,7 +41,7 @@ jobs:
           pip install -r requirements.txt
       - name: Run migrations
         run: |
-          alembic upgrade head
+          CI=present alembic upgrade head
       - name: Tests with pytest
         env:
           DB_USER: postgres
