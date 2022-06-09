@@ -31,7 +31,7 @@ target_metadata = None
 
 def get_url() -> str:
     if os.environ.get("CI"):
-        return "postgresql+psycopg2://postgres:postgres@127.0.0.1/no_pressure_query"
+        return "postgresql+psycopg2://postgres:postgres@localhost/no_pressure_query"
     else:
         return "postgresql+psycopg2://postgres:123cc123@localhost/no_pressure_query"
 

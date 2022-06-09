@@ -41,10 +41,7 @@ jobs:
           pip install -r requirements.txt
       - name: Run migrations
         env:
-          DB_USER: postgres
-          DB_HOST: localhost
-          DB_PASSWORD: postgres
-          DB_NAME: no_pressure_query
+          CI: true
         run: |
           alembic upgrade head
       - name: Tests with pytest
