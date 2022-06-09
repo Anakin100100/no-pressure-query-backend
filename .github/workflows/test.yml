@@ -18,8 +18,8 @@ jobs:
         image: postgres
         # Provide the password for postgres
         env:
-          POSTGRES_USER: cicd_user
-          POSTGRES_PASSWORD: cicd_user_password
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: 123cc123
           POSTGRES_DB: no_pressure_query
         ports:
           - 5432:5432
