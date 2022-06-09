@@ -5,6 +5,8 @@ name: TEST
 on: [push]
 
 jobs:
+  env:
+    CI: present
   build:
     runs-on: ubuntu-latest
     strategy:
@@ -40,8 +42,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: Run migrations
-        env:
-          CI: "PRESENT"
         run: |
           alembic upgrade head
       - name: Tests with pytest
