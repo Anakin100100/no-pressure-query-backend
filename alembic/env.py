@@ -31,9 +31,9 @@ target_metadata = None
 
 def get_url() -> str:
     if os.environ.get("CI"):
-        return "postgres://postgres:postgres@127.0.0.1"
+        return "postgresql+psycopg2://postgres:postgres@127.0.0.1/postgres"
     else:
-        return "postgresql+psycopg2://postgres:123cc123@localhost/no_pressure_querys"
+        return "postgresql+psycopg2://postgres:123cc123@localhost/no_pressure_query"
 
 
 def run_migrations_offline():
