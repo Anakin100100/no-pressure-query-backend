@@ -1,8 +1,14 @@
+import sys
+import os
+from os.path import abspath, dirname
+
+sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
+
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
-
+import os
 from alembic import context
 
 # this is the Alembic Config object, which provides
@@ -25,6 +31,13 @@ target_metadata = None
 # ... etc.
 
 
+def get_url() -> str:
+    if os.environ.get("CI"):
+        return "postgres://postgres:postgres@127.0.0.1"
+    else:
+        return "postgresql+psycopg2://postgres:123cc123@localhost/no_pressure_querys"
+
+
 def run_migrations_offline():
     """Run migrations in 'offline' mode.
 
@@ -37,7 +50,7 @@ def run_migrations_offline():
     script output.
 
     """
-    url = config.get_main_option("sqlalchemy.url")
+    url = get_url()
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -64,7 +77,9 @@ def run_migrations_online():
     )
 
     with connectable.connect() as connection:
-        context.configure(connection=connection, target_metadata=target_metadata)
+        context.configure(
+            connection=connection, target_metadata=target_metadata, url=get_url()
+        )
 
         with context.begin_transaction():
             context.run_migrations()
