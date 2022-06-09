@@ -20,7 +20,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: github_actions
+          POSTGRES_DB: no_pressure_query
         ports:
           - 5432:5432
         # Set health checks to wait until postgres has started
@@ -44,6 +44,7 @@ jobs:
           DB_USER: postgres
           DB_HOST: localhost
           DB_PASSWORD: postgres
+          DB_NAME: no_pressure_query
         run: |
           alembic upgrade head
       - name: Tests with pytest
