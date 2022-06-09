@@ -18,8 +18,8 @@ jobs:
         image: postgres
         # Provide the password for postgres
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: cicd_user
+          POSTGRES_PASSWORD: cicd_user_password
           POSTGRES_DB: no_pressure_query
         ports:
           - 5432:5432
@@ -41,7 +41,7 @@ jobs:
           pip install -r requirements.txt
       - name: Run migrations
         env:
-          CI: true
+          CI: "PRESENT"
         run: |
           alembic upgrade head
       - name: Tests with pytest
