@@ -1,4 +1,4 @@
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends
 import fastapi
 import jwt
 from sqlalchemy.orm import Session

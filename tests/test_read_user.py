@@ -1,18 +1,16 @@
-import json
 import sys
-from unittest import skip
 
 sys.path.append("../no-pressure-query-backend")
 
 from main import app
 from fastapi.testclient import TestClient
 
-import test_utils
+import testing_utils
 
 
 def test_read_correctly_created_user():
     client = TestClient(app)
-    user = test_utils.create_user()
+    user = testing_utils.create_user()
     response = client.get(f"/users/{user.id}")
     assert response.status_code == 200
     assert response.json()["email"] == user.email

@@ -2,7 +2,7 @@ from fastapi import Depends, FastAPI, HTTPException
 import fastapi
 from pydantic import HttpUrl
 from sqlalchemy.orm import Session
-import auth
+import auth_utils
 from database import get_db
 import re
 
@@ -39,7 +39,9 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
 
 @app.get("/users/me", response_model=schemas.User)
-async def read_user_return_token(user: schemas.User = Depends(auth.get_current_user)):
+async def read_user_return_token(
+    user: schemas.User = Depends(auth_utils.get_current_user),
+):
     return user
 
 
@@ -56,11 +58,13 @@ async def generate_token(
     form_data: security.OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db),
 ):
-    user = await auth.authenticate_user(form_data.username, form_data.password, db)
+    user = await auth_utils.authenticate_user(
+        form_data.username, form_data.password, db
+    )
     if not user:
         return fastapi.HTTPException(status_code=401, detail="Invalid credentials")
 
-    return await auth.create_token(user)
+    return await auth_utils.create_token(user)
 
 
 @app.get("/api")
