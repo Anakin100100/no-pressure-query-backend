@@ -9,7 +9,7 @@ import uuid
 
 
 def create_user() -> models.User:
-    email = f"test_email{uuid.uuid4()}"
+    email = f"{uuid.uuid4()}@gmail.com".replace("-", "")
     password = "test_password"
     client = TestClient(app)
     r = client.post(
@@ -17,7 +17,6 @@ def create_user() -> models.User:
         json={"email": email, "password": password},
     )
     response = r.json()
-    print(response)
     user = models.User(**response)
     return user
 

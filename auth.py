@@ -17,7 +17,7 @@ JWT_SECRET = "1283818238128381823"
 # Dependency
 async def get_current_user(
     db: Session = Depends(get_db), token: str = Depends(oauth2schema)
-):
+) -> schemas.User:
     try:
         payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
         user = db.query(models.User).get(payload["id"])
@@ -28,14 +28,14 @@ async def get_current_user(
 
 
 async def authenticate_user(email: str, password: str, db: Session):
-    user = crud.get_user_by_email(db, email=email)
-    if not user:
+    db_user = crud.get_user_by_email(db, email=email)
+    if not db_user:
         return False
 
-    if not user.verify_password(password=password):
+    if not db_user.verify_password(password=password):
         return False
 
-    return user
+    return db_user
 
 
 async def create_token(user: models.User):

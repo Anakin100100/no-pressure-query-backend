@@ -1,3 +1,5 @@
+# TODO: -use a new conda env and install only the required packages
+#       -don't use fastapi[all]
 alembic==1.4.3
 amqp==5.1.1
 anyio==3.6.1
