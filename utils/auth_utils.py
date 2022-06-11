@@ -18,10 +18,10 @@ JWT_SECRET = "1283818238128381823"
 
 # Dependency
 async def get_current_user(
-    db: Session = Depends(get_db), token: str = Depends(oauth2schema)
+    db: Session = Depends(get_db), token: str = Depends(oauth2schema), secret: str = JWT_SECRET
 ) -> user_schema.User:
     try:
-        payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
+        payload = jwt.decode(token, secret, algorithms=["HS256"])
         user = db.query(user_model.User).get(payload["id"])
     except:
         raise fastapi.HTTPException(detail="Invalid token", status_code=401)
@@ -40,7 +40,7 @@ async def authenticate_user(email: str, password: str, db: Session):
     return db_user
 
 
-async def create_token(user: user_model.User):
+async def create_token(user: user_model.User, secret: str = JWT_SECRET):
     user_obj = user_schema.User.from_orm(user)
-    token = jwt.encode(user_obj.dict(), JWT_SECRET)
+    token = jwt.encode(user_obj.dict(), secret)
     return dict(access_token=token, token_type="bearer")

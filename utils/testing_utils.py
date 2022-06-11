@@ -9,9 +9,10 @@ import uuid
 import models.user_model as user_model
 
 
-def create_user() -> user_model.User:
-    email = f"{uuid.uuid4()}@gmail.com".replace("-", "")
-    password = "test_password"
+    
+def create_user(email: str = None, password: str = "test_password") -> user_model.User:
+    if email is None:
+        email = f"{uuid.uuid4()}@gmail.com".replace("-", "")
     client = TestClient(app)
     r = client.post(
         "/users/",

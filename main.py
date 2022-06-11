@@ -6,7 +6,6 @@ from utils.database_utils import get_db
 import re
 
 import schemas.user_schema as user_schema
-import models.user_model as user_model
 from utils.database_utils import Base
 import services.user_service as user_service
 from utils.database_utils import engine
