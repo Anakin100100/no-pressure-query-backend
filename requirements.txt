@@ -5,7 +5,7 @@ atomicwrites==1.4.0
 attrs==21.4.0
 bcrypt==3.2.2
 black==22.3.0
-celery==5.0.0
+celery>=5.2.2
 certifi==2022.5.18.1
 cffi==1.15.0
 charset-normalizer==2.0.12
