@@ -21,8 +21,9 @@ def upgrade():
         "users",
         sa.Column("id", sa.Integer, primary_key=True, index=True),
         sa.Column("email", sa.String(50), nullable=False, index=True),
-        sa.Column("hashed_password", sa.String(128)),
-        sa.Column("is_active", sa.Boolean, default=True),
+        sa.Column("hashed_password", sa.String(128, nullable=False)),
+        sa.Column("first_name", sa.String(32, nullable=False)),
+        sa.Column("last_name", sa.String(32, nullable=False))
     )
 
 
