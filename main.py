@@ -2,14 +2,14 @@ from fastapi import Depends, FastAPI, HTTPException
 import fastapi
 from sqlalchemy.orm import Session
 import auth_utils
-from database import get_db
+from database_utils import get_db
 import re
 
 import schemas
 import db_models.users_model as users_model
-from database import Base
+from database_utils import Base
 import services.users_service as users_service
-from database import engine
+from database_utils import engine
 import fastapi.security as security
 
 Base.metadata.create_all(bind=engine)

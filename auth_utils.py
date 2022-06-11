@@ -7,7 +7,7 @@ import schemas
 import db_models.users_model as users_model
 import services.users_service as users_service
 import fastapi.security as security
-from database import get_db
+from database_utils import get_db
 
 import fastapi.security as security
 
