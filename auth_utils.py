@@ -3,7 +3,8 @@ import fastapi
 import jwt
 from sqlalchemy.orm import Session
 
-import crud, models, schemas
+import models, schemas
+import services.users_service as users_service
 import fastapi.security as security
 from database import get_db
 
@@ -28,7 +29,7 @@ async def get_current_user(
 
 
 async def authenticate_user(email: str, password: str, db: Session):
-    db_user = crud.get_user_by_email(db, email=email)
+    db_user = users_service.get_user_by_email(db, email=email)
     if not db_user:
         return False
 
