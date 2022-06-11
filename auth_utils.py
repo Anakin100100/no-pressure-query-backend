@@ -3,7 +3,8 @@ import fastapi
 import jwt
 from sqlalchemy.orm import Session
 
-import models, schemas
+import schemas
+import db_models.users_model as users_model
 import services.users_service as users_service
 import fastapi.security as security
 from database import get_db
@@ -21,7 +22,7 @@ async def get_current_user(
 ) -> schemas.User:
     try:
         payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
-        user = db.query(models.User).get(payload["id"])
+        user = db.query(users_model.User).get(payload["id"])
     except:
         raise fastapi.HTTPException(detail="Invalid token", status_code=401)
 
@@ -39,7 +40,7 @@ async def authenticate_user(email: str, password: str, db: Session):
     return db_user
 
 
-async def create_token(user: models.User):
+async def create_token(user: users_model.User):
     user_obj = schemas.User.from_orm(user)
     token = jwt.encode(user_obj.dict(), JWT_SECRET)
     return dict(access_token=token, token_type="bearer")

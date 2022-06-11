@@ -1,6 +1,5 @@
 from sqlalchemy import Column, Integer, String
 import passlib.hash as hash
-
 from database import Base
 
 

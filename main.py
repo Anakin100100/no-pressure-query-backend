@@ -5,12 +5,14 @@ import auth_utils
 from database import get_db
 import re
 
-import models, schemas
+import schemas
+import db_models.users_model as users_model
+from database import Base
 import services.users_service as users_service
 from database import engine
 import fastapi.security as security
 
-models.Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
