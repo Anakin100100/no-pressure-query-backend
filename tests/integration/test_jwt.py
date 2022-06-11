@@ -5,7 +5,7 @@ sys.path.append("../no-pressure-query-backend")
 from main import app
 from fastapi.testclient import TestClient
 
-import testing_utils
+import utils.testing_utils as testing_utils
 
 
 def test_create_jwt():

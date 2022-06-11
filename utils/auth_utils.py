@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 import schemas.user_schema as user_schema
 import models.user_model as user_model
-import services.users_service as users_service
+import services.user_service as user_service
 import fastapi.security as security
 from utils.database_utils import get_db
 
@@ -30,7 +30,7 @@ async def get_current_user(
 
 
 async def authenticate_user(email: str, password: str, db: Session):
-    db_user = users_service.get_user_by_email(db, email=email)
+    db_user = user_service.get_user_by_email(db, email=email)
     if not db_user:
         return False
 

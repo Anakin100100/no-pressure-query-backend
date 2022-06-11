@@ -8,7 +8,7 @@ import re
 import schemas.user_schema as user_schema
 import models.user_model as user_model
 from utils.database_utils import Base
-import services.users_service as users_service
+import services.user_service as user_service
 from utils.database_utils import engine
 import fastapi.security as security
 
@@ -25,7 +25,7 @@ email_regex = "^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$"
 
 @app.post("/users/", response_model=user_schema.User)
 def create_user(user: user_schema.UserCreate, db: Session = Depends(get_db)):
-    db_user = users_service.get_user_by_email(db, email=user.email)
+    db_user = user_service.get_user_by_email(db, email=user.email)
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
     if len(user.password) < 8:
@@ -44,7 +44,7 @@ def create_user(user: user_schema.UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(
             status_code=400, detail="Last name must be at least 2 characters"
         )
-    db_created_user = users_service.create_user(db=db, user=user)
+    db_created_user = user_service.create_user(db=db, user=user)
     return user_schema.User.from_orm(db_created_user)
 
 
@@ -57,7 +57,7 @@ async def read_user_return_token(
 
 @app.get("/users/{user_id}", response_model=user_schema.User)
 async def read_user(user_id: int, db: Session = Depends(get_db)):
-    db_user = users_service.get_user(db, user_id=user_id)
+    db_user = user_service.get_user(db, user_id=user_id)
     if db_user is None:
         raise HTTPException(status_code=400, detail="User does not exist")
     return user_schema.User.from_orm(db_user)
