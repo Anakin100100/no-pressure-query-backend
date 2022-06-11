@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 import passlib.hash as hash
 import schemas
-import db_models.user_model as user_model
+import models.user_model as user_model
 
 
 def get_user(db: Session, user_id: int) -> user_model.User:

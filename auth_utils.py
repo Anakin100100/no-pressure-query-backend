@@ -4,7 +4,7 @@ import jwt
 from sqlalchemy.orm import Session
 
 import schemas
-import db_models.user_model as user_model
+import models.user_model as user_model
 import services.users_service as users_service
 import fastapi.security as security
 from database_utils import get_db

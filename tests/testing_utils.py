@@ -6,7 +6,7 @@ from main import app
 from fastapi.testclient import TestClient
 
 import uuid
-import db_models.user_model as user_model
+import models.user_model as user_model
 
 
 def create_user() -> user_model.User:

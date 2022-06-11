@@ -8,7 +8,7 @@ import uuid
 
 from database_utils import SessionLocal
 from datetime import datetime
-import db_models.user_model as user_model
+import models.user_model as user_model
 
 
 def test_create_user_with_correct_data():
