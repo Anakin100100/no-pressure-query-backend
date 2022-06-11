@@ -9,6 +9,8 @@ def orjson_dumps(v, *, default):
 
 class UserBase(BaseModel):
     email: str
+    first_name: str
+    last_name: str
 
 
 class UserCreate(UserBase):
@@ -17,7 +19,6 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
-    is_active: bool
 
     class Config:
         orm_mode = True

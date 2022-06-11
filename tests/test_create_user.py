@@ -5,6 +5,7 @@ sys.path.append("../no-pressure-query-backend")
 from main import app
 from fastapi.testclient import TestClient
 import models
+import uuid
 from database import SessionLocal
 from datetime import datetime
 
@@ -16,7 +17,7 @@ def test_create_user_with_correct_data():
     number_of_users_before = db.query(models.User).count()
     response = client.post(
         "/users/",
-        json={"email": email, "password": "test_password"},
+        json={"email": email, "password": "test_password", "first_name": "test", "last_name": "test"},
     )
     number_of_users_after = db.query(models.User).count()
     db.close()
@@ -24,7 +25,8 @@ def test_create_user_with_correct_data():
     assert response.status_code == 200
     assert response.json()["email"] == email
     assert response.json()["id"] >= 0
-    assert response.json()["is_active"] is True
+    assert response.json()["first_name"] == "test"
+    assert response.json()["last_name"] == "test"
 
 
 def test_create_user_with_incorrect_password():
@@ -34,7 +36,7 @@ def test_create_user_with_incorrect_password():
     number_of_users_before = db.query(models.User).count()
     response = client.post(
         "/users/",
-        json={"email": email, "password": ""},
+        json={"email": email, "password": "", "first_name": "test", "last_name": "test"},
     )
     number_of_users_after = db.query(models.User).count()
     assert number_of_users_after - number_of_users_before == 0
@@ -46,14 +48,44 @@ def test_create_user_with_incorrect_password():
 def test_create_user_with_incorrect_email():
     db = SessionLocal()
     client = TestClient(app)
-    email = f"email_{datetime.now().strftime('%H:%M:%S:%f')}_wrong_email"
+    email = f"email{datetime.now().strftime('%H:%M:%S:%f')}_wrong_email"
     number_of_users_before = db.query(models.User).count()
     response = client.post(
         "/users/",
-        json={"email": email, "password": "test_password"},
+        json={"email": email, "password": "test_password", "first_name": "test", "last_name": "test"},
     )
     number_of_users_after = db.query(models.User).count()
     assert number_of_users_after - number_of_users_before == 0
     assert response.status_code == 400
     assert response.json()["detail"] == "Email must be a valid email address"
+    db.close()
+
+def test_create_user_with_invalid_first_name():
+    db = SessionLocal()
+    client = TestClient(app)
+    email =  f"{uuid.uuid4()}@gmail.com".replace("-", "")
+    number_of_users_before = db.query(models.User).count()
+    response = client.post(
+        "/users/",
+        json={"email": email, "password": "test_password", "first_name": "", "last_name": "test"},
+    )
+    number_of_users_after = db.query(models.User).count()
+    assert number_of_users_after - number_of_users_before == 0
+    assert response.status_code == 400
+    assert response.json()["detail"] == "First name must be at least 2 characters"
+    db.close()
+
+def test_create_user_with_invalid_last_name():
+    db = SessionLocal()
+    client = TestClient(app)
+    email =  f"{uuid.uuid4()}@gmail.com".replace("-", "")
+    number_of_users_before = db.query(models.User).count()
+    response = client.post(
+        "/users/",
+        json={"email": email, "password": "test_password", "first_name": "test", "last_name": ""},
+    )
+    number_of_users_after = db.query(models.User).count()
+    assert number_of_users_after - number_of_users_before == 0
+    assert response.status_code == 400
+    assert response.json()["detail"] == "Last name must be at least 2 characters"
     db.close()

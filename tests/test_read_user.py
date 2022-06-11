@@ -15,7 +15,6 @@ def test_read_correctly_created_user():
     assert response.status_code == 200
     assert response.json()["email"] == user.email
     assert response.json()["id"] == user.id
-    assert response.json()["is_active"] is True
 
 
 def test_non_existing_user():

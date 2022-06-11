@@ -34,6 +34,14 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(
             status_code=400, detail="Email must be a valid email address"
         )
+    if len(user.first_name) < 2:
+        raise HTTPException(
+            status_code=400, detail="First name must be at least 2 characters"
+        )
+    if len(user.last_name) < 2:
+        raise HTTPException(
+            status_code=400, detail="Last name must be at least 2 characters"
+        )
     db_created_user = crud.create_user(db=db, user=user)
     return schemas.User.from_orm(db_created_user)
 

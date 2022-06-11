@@ -31,7 +31,6 @@ def test_create_jwt():
     assert response_validate_token.status_code == 200
     assert response_validate_token.json()["email"] == user.email
     assert response_validate_token.json()["id"] == user.id
-    assert response_validate_token.json()["is_active"] is True
 
 
 def test_access_user_info_with_wrong_token():
