@@ -1,15 +1,15 @@
 from fastapi import Depends, FastAPI, HTTPException
 import fastapi
 from sqlalchemy.orm import Session
-import auth_utils
-from database_utils import get_db
+import utils.auth_utils as auth_utils
+from utils.database_utils import get_db
 import re
 
 import schemas.user_schema as user_schema
 import models.user_model as user_model
-from database_utils import Base
+from utils.database_utils import Base
 import services.users_service as users_service
-from database_utils import engine
+from utils.database_utils import engine
 import fastapi.security as security
 
 Base.metadata.create_all(bind=engine)

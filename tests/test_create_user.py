@@ -6,7 +6,7 @@ from main import app
 from fastapi.testclient import TestClient
 import uuid
 
-from database_utils import SessionLocal
+from utils.database_utils import SessionLocal
 from datetime import datetime
 import models.user_model as user_model
 
