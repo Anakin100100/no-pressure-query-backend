@@ -23,10 +23,10 @@ def create_user(email: str = None, password: str = "test_password") -> user_mode
     return user
 
 
-def get_token(user: user_model.User) -> str:
+def get_token(user: user_model.User, password: str = "test_password") -> str:
     client = TestClient(app)
     r = client.post(
-        "/api/token", data={"username": user.email, "password": "test_password"}
+        "/api/token", data={"username": user.email, "password": password}
     )
     response = r.json()
     return response["access_token"]
