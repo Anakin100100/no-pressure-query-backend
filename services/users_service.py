@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 import passlib.hash as hash
-import schemas
+import schemas.user_schema as user_schema
 import models.user_model as user_model
 
 
@@ -18,7 +18,7 @@ def get_user_by_email(db: Session, email: str) -> user_model.User:
     return db.query(user_model.User).filter(user_model.User.email == email).first()
 
 
-def create_user(db: Session, user: schemas.UserCreate) -> user_model.User:
+def create_user(db: Session, user: user_schema.UserCreate) -> user_model.User:
     """
     Create a new user
     """

@@ -5,7 +5,7 @@ import auth_utils
 from database_utils import get_db
 import re
 
-import schemas
+import schemas.user_schema as user_schema
 import models.user_model as user_model
 from database_utils import Base
 import services.users_service as users_service
@@ -23,8 +23,8 @@ JWT_SECRET = "1283818238128381823"
 email_regex = "^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$"
 
 
-@app.post("/users/", response_model=schemas.User)
-def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+@app.post("/users/", response_model=user_schema.User)
+def create_user(user: user_schema.UserCreate, db: Session = Depends(get_db)):
     db_user = users_service.get_user_by_email(db, email=user.email)
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
@@ -45,22 +45,22 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
             status_code=400, detail="Last name must be at least 2 characters"
         )
     db_created_user = users_service.create_user(db=db, user=user)
-    return schemas.User.from_orm(db_created_user)
+    return user_schema.User.from_orm(db_created_user)
 
 
-@app.get("/users/me", response_model=schemas.User)
+@app.get("/users/me", response_model=user_schema.User)
 async def read_user_return_token(
-    user: schemas.User = Depends(auth_utils.get_current_user),
+    user: user_schema.User = Depends(auth_utils.get_current_user),
 ):
     return user
 
 
-@app.get("/users/{user_id}", response_model=schemas.User)
+@app.get("/users/{user_id}", response_model=user_schema.User)
 async def read_user(user_id: int, db: Session = Depends(get_db)):
     db_user = users_service.get_user(db, user_id=user_id)
     if db_user is None:
         raise HTTPException(status_code=400, detail="User does not exist")
-    return schemas.User.from_orm(db_user)
+    return user_schema.User.from_orm(db_user)
 
 
 @app.post("/api/token")
