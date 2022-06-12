@@ -54,3 +54,5 @@ def update_user_email(db: Session, user_id: int, new_email: str):
         raise HTTPException(status_code=400, detail="user with this email already exists")
     user.email = new_email
     db.commit()
+
+#TODO: implement the update_user_first_name and update_user_last_name menthods
