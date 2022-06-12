@@ -61,4 +61,10 @@ def update_first_name(db: Session, user_id: int, new_first_name: str):
     user = get_user(db=db, user_id=user_id)
     user.first_name = new_first_name
     db.commit()
-#TODO: implement the update_user_first_name and update_user_last_name menthods
+
+def update_last_name(db: Session, user_id: int, new_last_name: str):
+    if len(new_last_name) < 3:
+        raise HTTPException(status_code=400, detail="Last name must be at least 2 characters")
+    user = get_user(db=db, user_id=user_id)
+    user.last_name = new_last_name
+    db.commit()
