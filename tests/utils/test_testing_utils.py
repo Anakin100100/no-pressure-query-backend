@@ -2,7 +2,7 @@ import sys
 
 sys.path.append("../no-pressure-query-backend")
 
-from main import JWT_SECRET
+from utils.auth_utils import JWT_SECRET
 from utils import testing_utils
 from utils.database_utils import SessionLocal
 from services import user_service

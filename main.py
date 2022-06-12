@@ -17,8 +17,6 @@ app = FastAPI()
 
 oauth2schema = security.OAuth2PasswordBearer(tokenUrl="/api/token")
 
-JWT_SECRET = "1283818238128381823"
-
 email_regex = "^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$"
 
 
@@ -74,6 +72,18 @@ async def generate_token(
         return fastapi.HTTPException(status_code=401, detail="Invalid credentials")
 
     return await auth_utils.create_token(user)
+
+@app.get("/users/delete_user/{delete_user_id}")
+async def delete_user(
+    delete_user_id: int,
+    user: user_schema.User = Depends(auth_utils.get_current_user),
+    db: Session = Depends(get_db)
+):
+    user_service.delete_user(db=db, user_id=delete_user_id)
+    return {
+        "message": "user has been successfully deleted"
+    }
+
 
 
 @app.get("/api")

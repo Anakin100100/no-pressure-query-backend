@@ -3,6 +3,7 @@ from utils.database_utils import SessionLocal
 from utils.testing_utils import create_user
 from schemas import user_schema
 from services import user_service
+from utils.auth_utils import JWT_SECRET
 import jwt
 from fastapi import HTTPException
 import pytest
@@ -16,14 +17,13 @@ async def test_get_current_user_with_incorrect_token():
 
 @pytest.mark.asyncio
 async def test_get_current_user_with_correct_token():
-    TEST_JWT_SECRET = "923994293942949"
     db = SessionLocal()
     user_created = create_user()
     user_db_model = user_service.get_user(db=db, user_id=user_created.id)
     user_obj = user_schema.User.from_orm(user_db_model)
-    token = jwt.encode(user_obj.dict(), TEST_JWT_SECRET)
+    token = jwt.encode(user_obj.dict(), JWT_SECRET)
     print(token)
-    current_user = await auth_utils.get_current_user(db=db, token=token, secret=TEST_JWT_SECRET)
+    current_user = await auth_utils.get_current_user(db=db, token=token)
     db.close()
     assert user_obj.id == current_user.id
     assert user_obj.email == current_user.email
