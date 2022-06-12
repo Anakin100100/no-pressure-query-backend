@@ -123,3 +123,22 @@ def test_update_first_name_with_incorrect_first_name():
     #name shouldn't have changed
     assert user_service.get_user(db=db, user_id=user.id).first_name == user.first_name
     db.close()
+
+def test_update_last_name_with_correct_first_name():
+    db = SessionLocal()
+    user = testing_utils.create_user()
+    correct_new_last_name = "newlastname"
+    user_service.update_last_name(db=db, new_last_name=correct_new_last_name, user_id=user.id)
+    assert user_service.get_user(db=db, user_id=user.id).last_name == "newlastname"
+    db.close()
+
+def test_update_last_name_with_incorrect_last_name():
+    db = SessionLocal()
+    user = testing_utils.create_user()
+    incorrect_new_last_name = ""
+    with pytest.raises(HTTPException) as exception:
+        user_service.update_last_name(db=db, new_last_name=incorrect_new_last_name, user_id=user.id)
+        assert exception.detail == "Last name must be at least 2 characters"
+    #name shouldn't have changed
+    assert user_service.get_user(db=db, user_id=user.id).last_name == user.last_name
+    db.close()
