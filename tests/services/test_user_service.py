@@ -102,7 +102,7 @@ def test_update_user_email_with_wrong_user_id():
     with pytest.raises(HTTPException) as exception:
         #User with this id does not exist
         user_service.update_user_email(db=db, user_id=-200, new_email=correct_new_email)
-        assert exception.detail == "user with this email does not exist"
+        assert exception.detail == "user with this id does not exist"
     db.close()
 
 def test_update_first_name_with_correct_first_name():
@@ -111,13 +111,15 @@ def test_update_first_name_with_correct_first_name():
     correct_new_first_name = "newfirstname"
     user_service.update_first_name(db=db, new_first_name=correct_new_first_name, user_id=user.id)
     assert user_service.get_user(db=db, user_id=user.id).first_name == "newfirstname"
+    db.close()
 
 def test_update_first_name_with_incorrect_first_name():
-    db = SessionLocal
+    db = SessionLocal()
     user = testing_utils.create_user()
     incorrect_new_first_name = ""
     with pytest.raises(HTTPException) as exception:
         user_service.update_first_name(db=db, new_first_name=incorrect_new_first_name, user_id=user.id)
         assert exception.detail == "First name must be at least 2 characters"
     #name shouldn't have changed
-    assert user_service.get_user(db=db, user_id=user.id).first_name == user.name
+    assert user_service.get_user(db=db, user_id=user.id).first_name == user.first_name
+    db.close()

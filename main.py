@@ -35,11 +35,11 @@ def create_user(user: user_schema.UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(
             status_code=400, detail="Email must be a valid email address"
         )
-    if len(user.first_name) < 2:
+    if len(user.first_name) < 3:
         raise HTTPException(
             status_code=400, detail="First name must be at least 2 characters"
         )
-    if len(user.last_name) < 2:
+    if len(user.last_name) < 3:
         raise HTTPException(
             status_code=400, detail="Last name must be at least 2 characters"
         )

@@ -46,7 +46,7 @@ def delete_user(db: Session, user_id: int):
 def update_user_email(db: Session, user_id: int, new_email: str):
     user = get_user(db=db, user_id=user_id)
     if not user:
-        raise HTTPException(status_code=400, detail="user with this email does not exist")
+        raise HTTPException(status_code=400, detail="user with this id does not exist")
     if not re.match(EMAIL_REGEX, new_email):
         raise HTTPException(status_code=400, detail="incorrect email")
     user_with_identical_email = get_user_by_email(db=db, email=new_email)
@@ -55,4 +55,10 @@ def update_user_email(db: Session, user_id: int, new_email: str):
     user.email = new_email
     db.commit()
 
+def update_first_name(db: Session, user_id: int, new_first_name: str):
+    if len(new_first_name) < 3:
+        raise HTTPException(status_code=400, detail="First name must be at least 2 characters")
+    user = get_user(db=db, user_id=user_id)
+    user.first_name = new_first_name
+    db.commit()
 #TODO: implement the update_user_first_name and update_user_last_name menthods
