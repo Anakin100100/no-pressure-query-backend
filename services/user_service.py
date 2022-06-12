@@ -1,9 +1,12 @@
+from pkg_resources import get_supported_platform
 from sqlalchemy.orm import Session
 import passlib.hash as hash
 import schemas.user_schema as user_schema
 import models.user_model as user_model
 from fastapi import HTTPException
+import re
 
+EMAIL_REGEX = "^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$"
 
 def get_user(db: Session, user_id: int) -> user_model.User:
     """
@@ -38,4 +41,16 @@ def delete_user(db: Session, user_id: int):
     if not user:
         raise HTTPException(status_code=400, detail=f"A user with id: {user_id} doesn't exist")
     db.delete(user)
+    db.commit()
+
+def update_user_email(db: Session, user_id: int, new_email: str):
+    user = get_user(db=db, user_id=user_id)
+    if not user:
+        raise HTTPException(status_code=400, detail="user with this email does not exist")
+    if not re.match(EMAIL_REGEX, new_email):
+        raise HTTPException(status_code=400, detail="incorrect email")
+    user_with_identical_email = get_user_by_email(db=db, email=new_email)
+    if user_with_identical_email is not None: 
+        raise HTTPException(status_code=400, detail="user with this email already exists")
+    user.email = new_email
     db.commit()

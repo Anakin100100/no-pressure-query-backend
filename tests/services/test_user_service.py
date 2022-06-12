@@ -82,7 +82,7 @@ def test_update_user_email_with_incorrecct_email():
     assert user_service.get_user_by_email(db=db, email=user.email) is not None
     db.close()
 
-def test_updateuser_email_with_existing_email():
+def test_update_user_email_with_existing_email():
     db = SessionLocal()
     user_1 = testing_utils.create_user()
     user_2 = testing_utils.create_user()
@@ -93,3 +93,12 @@ def test_updateuser_email_with_existing_email():
     assert user_service.get_user_by_email(db=db, email=user_1.email) is not None
     db.close()
 
+def test_update_user_email_with_wrong_user_id():
+    db = SessionLocal()
+    user = testing_utils.create_user()
+    correct_new_email =  f"{uuid.uuid4()}@gmail.com".replace("-", "")
+    with pytest.raises(HTTPException) as exception:
+        #User with this id does not exist
+        user_service.update_user_email(db=db, user_id=-200, new_email=correct_new_email)
+        assert exception.detail == "user with this email does not exist"
+    db.close()
