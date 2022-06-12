@@ -1,3 +1,4 @@
+import email
 import pytest
 from fastapi import HTTPException
 from services import user_service
@@ -5,6 +6,7 @@ from utils import testing_utils
 from utils.database_utils import SessionLocal
 from schemas.user_schema import UserCreate
 from models import user_model
+import uuid
 
 def test_get_user():
     user = testing_utils.create_user()
@@ -57,3 +59,37 @@ def test_delete_non_existant_user():
     num_users_after_delete = db.query(user_model.User).count()
     assert num_users_after_delete - num_users_before_delete == 0
     db.close()
+
+def test_update_user_email_with_correct_unique_email():
+    db = SessionLocal()
+    user = testing_utils.create_user()
+    old_email = user.email
+    correct_new_email =  f"{uuid.uuid4()}@gmail.com".replace("-", "")
+    user_service.update_user_email(db=db, user_id=user.id, new_email=correct_new_email)
+    assert user_service.get_user(db=db, user_id=user.id).email == correct_new_email
+    assert user_service.get_user_by_email(db=db, email=old_email) is None
+    db.close()
+
+def test_update_user_email_with_incorrecct_email():
+    db = SessionLocal()
+    user = testing_utils.create_user()
+    incorrect_new_email =  "email_that_schould_not_be_accepted"
+    with pytest.raises(HTTPException) as exception:
+        user_service.update_user_email(db=db, user_id=user.id, new_email=incorrect_new_email)
+        assert exception.detail == "incorrect email"
+    #email should remain unchanged
+    assert user_service.get_user(db=db, user_id=user.id).email == user.email
+    assert user_service.get_user_by_email(db=db, email=user.email) is not None
+    db.close()
+
+def test_updateuser_email_with_existing_email():
+    db = SessionLocal()
+    user_1 = testing_utils.create_user()
+    user_2 = testing_utils.create_user()
+    with pytest.raises(HTTPException) as exception:
+        user_service.update_user_email(db=db, user_id=user_1.id, new_email=user_2.email)
+        assert exception.detail == "user with this email already exists"
+    assert user_service.get_user(db=db, user_id=user_1.id).email == user_1.email
+    assert user_service.get_user_by_email(db=db, email=user_1.email) is not None
+    db.close()
+
