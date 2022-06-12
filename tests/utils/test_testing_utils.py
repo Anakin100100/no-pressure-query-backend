@@ -12,11 +12,8 @@ import jwt
 
 def test_create_user():
     db = SessionLocal()
-    num_users_before_user_create = db.query(user_model.User).count()
     user = testing_utils.create_user()
-    num_users_after_user_create = db.query(user_model.User).count()
-    db.close()
-    assert num_users_after_user_create - num_users_before_user_create == 1
+    assert user_service.get_user(db=db, user_id=user.id) is not None
 
 def test_get_token_with_specific_password():
     user = testing_utils.create_user(password="test_password")

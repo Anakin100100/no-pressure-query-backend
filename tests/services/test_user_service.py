@@ -44,22 +44,17 @@ def test_create_user():
 def test_delete_user():
     user = testing_utils.create_user()
     db = SessionLocal()
-    num_users_before_delete = db.query(user_model.User).count()
     user_service.delete_user(db=db, user_id=user.id)
-    num_users_after_delete = db.query(user_model.User).count()
     db.close()
-    assert num_users_after_delete - num_users_before_delete == -1
     assert user_service.get_user(db=db, user_id=user.id) == None 
     assert user_service.get_user_by_email(db=db, email=user.email) == None
 
 def test_delete_non_existant_user():
     db = SessionLocal()
-    num_users_before_delete = db.query(user_model.User).count()
-    with pytest.raises(HTTPException):
+    with pytest.raises(HTTPException) as exception:
         #User with this id cannot exist in the db
         user_service.delete_user(db=db, user_id=-200)
-    num_users_after_delete = db.query(user_model.User).count()
-    assert num_users_after_delete - num_users_before_delete == 0
+        assert exception.detail == "user with this id does not exist"
     db.close()
 
 def test_update_user_email_with_correct_unique_email():
