@@ -48,7 +48,7 @@ jobs:
           DB_HOST: localhost
           DB_PASSWORD: postgres
         run: |
-          pytest
+          pytest -n 4
   lint:
     runs-on: ubuntu-latest
     strategy:
