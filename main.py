@@ -79,6 +79,8 @@ async def delete_user(
     user: user_schema.User = Depends(auth_utils.get_current_user),
     db: Session = Depends(get_db)
 ):
+    if user.id != delete_user_id:
+        raise HTTPException(status_code=400, detail="You can only delete your own account")
     user_service.delete_user(db=db, user_id=delete_user_id)
     return {
         "message": "user has been successfully deleted"

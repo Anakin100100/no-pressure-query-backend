@@ -21,7 +21,7 @@ def test_delete_non_existant_user_authorised():
     )
     response = r.json()
     assert r.status_code == 400
-    assert response["detail"] == "A user with id: -9999999999 doesn't exist"
+    assert response["detail"] == "You can only delete your own account"
 
 def test_delete_non_existant_user_unauthorised():
     client = TestClient(app)
