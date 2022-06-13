@@ -60,3 +60,18 @@ def test_delete_existing_user_when_unauthorised():
     db = SessionLocal()
     assert user_service.get_user(db=db, user_id=user.id) is not None
     db.close()
+
+def test_delete_another_user_authorised():
+    client = TestClient(app)
+    user_1 = testing_utils.create_user()
+    user_2 = testing_utils.create_user()
+    print(f"user_id: {user_1.id}")
+    token = testing_utils.get_token(user_1)
+    r = client.get(
+        f"/users/delete_user/{user_2.id}", 
+        headers={
+            "Authorization": f"Bearer {token}"
+        }
+    )
+    assert r.status_code == 400
+    assert r.json()["detail"] == "You can only delete your own account"
