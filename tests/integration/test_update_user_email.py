@@ -15,20 +15,21 @@ def test_update_user_email_with_correct_new_email_authenticated():
     client = TestClient(app)
     user = testing_utils.create_user()
     token = testing_utils.get_token(user)
+    new_email = f"{uuid.uuid4()}@gmail.com".replace("-", "")
     r = client.get(
         f"/users/update_user_email/{user.id}", 
         headers={
             "Authorization": f"Bearer {token}"
         },
-        json={
-            "new_email": f"{uuid.uuid4()}@gmail.com".replace("-", "")
+        params={
+            "new_email": new_email
         }
     )
+    print(r.json())
     assert r.status_code == 200
-    assert r.json()["email"] == user.email
-    assert r.json()["id"] == user.id
+    assert r.json()["message"] == "user has been successfully updated"
     db = SessionLocal()
-    assert user_service.get_user_by_email(db=db, email=user.email).id == user.id
+    assert user_service.get_user_by_email(db=db, email=new_email).id == user.id
 
 def test_update_user_email_with_incorrect_new_email_authenticated():
     client = TestClient(app)
@@ -39,12 +40,12 @@ def test_update_user_email_with_incorrect_new_email_authenticated():
         headers={
             "Authorization": f"Bearer {token}"
         },
-        json={
+        params={
             "new_email": f"{uuid.uuid4()}".replace("-", "")
         }
     )
     assert r.status_code == 400
-    assert r.json()["detail"] == "Invalid email"
+    assert r.json()["detail"] == "incorrect email"
 
 def test_update_user_email_with_another_users_email_authenticated():
     client = TestClient(app)
@@ -56,12 +57,12 @@ def test_update_user_email_with_another_users_email_authenticated():
         headers={
             "Authorization": f"Bearer {token}"
         },
-        json={
+        params={
             "new_email": user_2.email
         }
     )
     assert r.status_code == 400
-    assert r.json()["detail"] == "This email already exists in the database"
+    assert r.json()["detail"] == "user with this email already exists"
 
 def test_update_another_users_email_authenticated():
     client = TestClient(app)
@@ -73,7 +74,7 @@ def test_update_another_users_email_authenticated():
         headers={
             "Authorization": f"Bearer {token}"
         },
-        json={
+        params={
             "new_email": f"{uuid.uuid4()}@gmail.com".replace("-", "")
         }
     )
