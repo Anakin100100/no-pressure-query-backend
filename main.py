@@ -92,4 +92,4 @@ async def delete_user(
 async def read_root():
     return {"message": "Another message"}
 
-#TODO: write endpoints for user_service.update_user_email and user_service.delete_user
+#TODO: write endpoints for user_service.update_user_email
