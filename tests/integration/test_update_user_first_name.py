@@ -43,7 +43,7 @@ def test_update_user_first_name_incorrectlly_authenticated():
         }
     )
     assert r.status_code == 400
-    assert r.json()["detail"] == "incorrect first name"
+    assert r.json()["detail"] == "First name must be at least 2 characters"
     db = SessionLocal()
     assert user_service.get_user(db=db, user_id=user.id).first_name == user.first_name
     db.close()
@@ -62,7 +62,7 @@ def test_update_user_first_name_correctly_unauthenticatd():
         }
     )
     assert r.status_code == 401
-    assert r.json()["detail"] == "invalid token"
+    assert r.json()["detail"] == "Invalid token"
     db = SessionLocal()
     assert user_service.get_user(db=db, user_id=user.id).first_name == user.first_name
     db.close()
@@ -82,7 +82,7 @@ def test_update_another_users_first_name_authenticated():
         }
     )
     assert r.status_code == 400
-    assert r.json()["detail"] == "you can only update your own first name"
+    assert r.json()["detail"] == "You can only update your own account"
     db = SessionLocal()
     assert user_service.get_user(db=db, user_id=user_1.id).first_name == user_1.first_name
     db.close()

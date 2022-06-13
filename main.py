@@ -100,6 +100,19 @@ async def update_user_email(
         "message": "user has been successfully updated"
     }
 
+@app.get("/users/update_user_first_name/{update_user_id}")
+async def update_user_first_name(
+    new_first_name: str,
+    update_user_id: int,
+    user: user_schema.User = Depends(auth_utils.get_current_user),
+    db: Session = Depends(get_db)
+):
+    if user.id != update_user_id:
+        raise HTTPException(status_code=400, detail="You can only update your own account")
+    user_service.update_first_name(db=db, user_id=update_user_id, new_first_name=new_first_name)
+    return {
+        "message": "user has been successfully updated"
+    }
 
 
 @app.get("/api")
