@@ -17,7 +17,7 @@ app = FastAPI()
 
 oauth2schema = security.OAuth2PasswordBearer(tokenUrl="/api/token")
 
-email_regex = "^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$"
+email_regex = "^[a-z0-9]+[\\._]?[a-z0-9]+[@]\\w+[.]\\w{2,3}$"
 
 
 @app.post("/users/", response_model=user_schema.User)
@@ -110,6 +110,20 @@ async def update_user_first_name(
     if user.id != update_user_id:
         raise HTTPException(status_code=400, detail="You can only update your own account")
     user_service.update_first_name(db=db, user_id=update_user_id, new_first_name=new_first_name)
+    return {
+        "message": "user has been successfully updated"
+    }
+
+@app.get("/users/update_user_last_name/{update_user_id}")
+async def update_user_first_name(
+    new_last_name: str,
+    update_user_id: int,
+    user: user_schema.User = Depends(auth_utils.get_current_user),
+    db: Session = Depends(get_db)
+):
+    if user.id != update_user_id:
+        raise HTTPException(status_code=400, detail="You can only update your own account")
+    user_service.update_last_name(db=db, user_id=update_user_id, new_last_name=new_last_name)
     return {
         "message": "user has been successfully updated"
     }
