@@ -15,7 +15,7 @@ def create_user(email: str = None, password: str = "test_password") -> user_mode
         email = f"{uuid.uuid4()}@gmail.com".replace("-", "")
     client = TestClient(app)
     r = client.post(
-        "/users/",
+        "/api/users/",
         json={"email": email, "password": password, "first_name": "test_first_name", "last_name": "test_last_name"},
     )
     response = r.json()

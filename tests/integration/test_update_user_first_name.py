@@ -1,7 +1,3 @@
-import sys
-
-sys.path.append("../no-pressure-query-backend")
-
 from main import app
 from fastapi.testclient import TestClient
 
@@ -13,6 +9,8 @@ def test_update_user_first_name_correctly_authenticated():
     client = TestClient(app)
     user = testing_utils.create_user()
     token = testing_utils.get_token(user)
+    #TODO refactor into a fixture
+    #TODO use a test coverage tool
     new_first_name = "NewFirstName"   
     r = client.get(
         f"/users/update_user_first_name/{user.id}",

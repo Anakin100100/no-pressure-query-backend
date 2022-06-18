@@ -17,7 +17,7 @@ def test_create_user_with_correct_data():
     client = TestClient(app)
     email = f"email_{datetime.now().strftime('%H%M%S%f')}@gmail.com"
     response = client.post(
-        "/users/",
+        "/api/users/",
         json={"email": email, "password": "test_password", "first_name": "test", "last_name": "test"},
     )
     user = user_service.get_user(db=db, user_id=response.json()["id"])
@@ -36,7 +36,7 @@ def test_create_user_with_incorrect_password():
     client = TestClient(app)
     email = f"email_{datetime.now().strftime('%H:%M:%S:%f')}"
     response = client.post(
-        "/users/",
+        "/api/users/",
         json={"email": email, "password": "", "first_name": "test", "last_name": "test"},
     )
     assert response.status_code == 400
@@ -47,7 +47,7 @@ def test_create_user_with_incorrect_email():
     client = TestClient(app)
     email = f"email{datetime.now().strftime('%H:%M:%S:%f')}_wrong_email"
     response = client.post(
-        "/users/",
+        "/api/users/",
         json={"email": email, "password": "test_password", "first_name": "test", "last_name": "test"},
     )
     assert response.status_code == 400
@@ -57,7 +57,7 @@ def test_create_user_with_invalid_first_name():
     client = TestClient(app)
     email =  f"{uuid.uuid4()}@gmail.com".replace("-", "")
     response = client.post(
-        "/users/",
+        "/api/users/",
         json={"email": email, "password": "test_password", "first_name": "", "last_name": "test"},
     )
     assert response.status_code == 400
@@ -67,7 +67,7 @@ def test_create_user_with_invalid_last_name():
     client = TestClient(app)
     email =  f"{uuid.uuid4()}@gmail.com".replace("-", "")
     response = client.post(
-        "/users/",
+        "/api/users/",
         json={"email": email, "password": "test_password", "first_name": "test", "last_name": ""},
     )
     assert response.status_code == 400

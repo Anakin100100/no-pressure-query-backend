@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 import utils.auth_utils as auth_utils
 from utils.database_utils import get_db
 import re
+from fastapi.middleware.cors import CORSMiddleware
 
 import schemas.user_schema as user_schema
 from utils.database_utils import Base
@@ -15,12 +16,25 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
+origins = [
+    "http://127.0.0.1:3000",
+    "http://localhost:3000"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 oauth2schema = security.OAuth2PasswordBearer(tokenUrl="/api/token")
 
 email_regex = "^[a-z0-9]+[\\._]?[a-z0-9]+[@]\\w+[.]\\w{2,3}$"
 
 
-@app.post("/users/", response_model=user_schema.User)
+@app.post("/api/users/", response_model=user_schema.User)
 def create_user(user: user_schema.UserCreate, db: Session = Depends(get_db)):
     db_user = user_service.get_user_by_email(db, email=user.email)
     if db_user:
@@ -127,10 +141,3 @@ async def update_user_first_name(
     return {
         "message": "user has been successfully updated"
     }
-
-
-@app.get("/api")
-async def read_root():
-    return {"message": "Another message"}
-
-#TODO: write endpoints for user_service.update_user_email
