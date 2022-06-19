@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
 import passlib.hash as hash
 from utils.database_utils import Base
 
@@ -11,6 +12,7 @@ class User(Base):
     hashed_password = Column(String)
     first_name = Column(String)
     last_name = Column(String)
+    surveys = relationship("Survey", back_populates="user")
 
     def verify_password(self, password: str):
         return hash.bcrypt.verify(password, self.hashed_password)
