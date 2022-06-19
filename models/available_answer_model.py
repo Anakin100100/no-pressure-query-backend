@@ -10,3 +10,4 @@ class AvailableAnswer(Base):
     weight = Column(Integer, nullable=False, default=1)
     survey_question_id = Column(Integer, ForeignKey("survey_questions.id"), nullable=False)
     survey_question = relationship("SurveyQuestion", back_populates="available_answers")
+    question_answers = relationship("QuestionAnswer", back_populates="available_answer")

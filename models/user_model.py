@@ -13,6 +13,7 @@ class User(Base):
     first_name = Column(String)
     last_name = Column(String)
     surveys = relationship("Survey", back_populates="user")
+    question_answers = relationship("QuestionAnswer", back_populates="user")
 
     def verify_password(self, password: str):
         return hash.bcrypt.verify(password, self.hashed_password)
