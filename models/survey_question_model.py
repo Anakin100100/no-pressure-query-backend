@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Enum, ForeignKey, Integer 
+from sqlalchemy import Column, Enum, ForeignKey, Integer, Text
 from sqlalchemy.orm import relationship
 from utils.database_utils import Base
 import enum
@@ -16,6 +16,7 @@ class SurveyQuestion(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     question_type = Column(Enum(MyEnum) )
+    question_text = Column(Text, nullable=False)
     survey_id = Column(Integer, ForeignKey("surveys.id"), nullable=False)
     survey = relationship("Survey", back_populates="survey_questions")
     available_answers = relationship("AvailableAnswer", back_populates="survey_question")

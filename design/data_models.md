@@ -21,6 +21,7 @@ SurveyQuestion
     has_many:
         - available_answers
     question_type: enum, required
+    question_text: text, required
     #The question type should aid us in writing unit tests and ensuring data validity
     #For "single_choice_question" we can have multiple available answers but only #one of 
     #them can contain an answer for a particular user
@@ -37,6 +38,7 @@ AvailableAnswer
         - question_answers
 
     weight: integer, required, default: 1
+    answer_text: text, required
 
 QuestionAnswer
     belongs_to:
