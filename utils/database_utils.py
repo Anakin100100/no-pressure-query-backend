@@ -13,6 +13,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 from models.survey_model import Survey
+from models.survey_question_model import SurveyQuestion
 #This import is needed to make SQLAlchemy work with models in multiple files
 #I don't know why we don't have to import User model but it throws an error when we try to import it
 
