@@ -22,7 +22,7 @@ SurveyQuestion
         - available_answers
     question_type: enum, required
     #The question type should aid us in writing unit tests and ensuring data validity
-    #For "single_choice_question" we can have multiple available answers but only one of 
+    #For "single_choice_question" we can have multiple available answers but only #one of 
     #them can contain an answer for a particular user
     #For "multiple_choice_question" we can have multiple available answers and multiple #AvalableAnswers can have answers from a single user
     #For "text_question" we can have one avaiable answer and it can have only one answer from
@@ -42,4 +42,4 @@ QuestionAnswer
     belongs_to:
         - available_answer
         - user 
-    answer: string, required
+    answer: text, required
