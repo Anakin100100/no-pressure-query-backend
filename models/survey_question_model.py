@@ -18,3 +18,4 @@ class SurveyQuestion(Base):
     question_type = Column(Enum(MyEnum) )
     survey_id = Column(Integer, ForeignKey("surveys.id"), nullable=False)
     survey = relationship("Survey", back_populates="survey_questions")
+    available_answers = relationship("AvailableAnswer", back_populates="survey_question")
