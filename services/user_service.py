@@ -1,4 +1,3 @@
-from pkg_resources import get_supported_platform
 from sqlalchemy.orm import Session
 import passlib.hash as hash
 import schemas.user_schema as user_schema
