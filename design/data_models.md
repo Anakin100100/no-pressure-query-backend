@@ -13,6 +13,7 @@ Survey:
         - user
     has_many:
         - survey_questions
+    name: string, required
         
 SurveyQuestion
     belongs_to
