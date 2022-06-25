@@ -1,6 +1,3 @@
-from cgi import test
-import email
-from telnetlib import SE
 import pytest
 from fastapi import HTTPException
 from services import user_service
