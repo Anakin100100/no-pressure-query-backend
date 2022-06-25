@@ -1,7 +1,3 @@
-import sys
-
-sys.path.append("../no-pressure-query-backend")
-
 from main import app
 from fastapi.testclient import TestClient
 from services import user_service
