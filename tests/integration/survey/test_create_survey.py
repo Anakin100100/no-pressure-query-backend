@@ -7,7 +7,7 @@ def test_create_survey_correctly():
     client = TestClient(app)
     user = testing_utils.create_user()
     token = testing_utils.get_token(user)
-    r = client.get(
+    r = client.post(
         "/surveys/create", 
         headers={
             "Authorization": f"Bearer {token}"
@@ -22,7 +22,7 @@ def test_create_survey_correctly():
 def test_create_survey_unauthorised():
     client = TestClient(app)
     user = testing_utils.create_user()
-    r = client.get(
+    r = client.post(
         "/surveys/create", 
         headers={
             "Authorization": "Bearer incorrect_token"
@@ -38,7 +38,7 @@ def test_create_survey_with_blank_name():
     client = TestClient(app)
     user = testing_utils.create_user()
     token = testing_utils.get_token(user)
-    r = client.get(
+    r = client.post(
         "/surveys/create", 
         headers={
             "Authorization": f"Bearer {token}"
