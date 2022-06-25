@@ -1,6 +1,5 @@
 from main import app
 from fastapi.testclient import TestClient
-from utils.database_utils import SessionLocal
 from utils import testing_utils
 
 
@@ -18,7 +17,7 @@ def test_create_survey_correctly():
         }
     )
     assert r.status_code == 200
-    assert r.json()["create_survey"]["name"] == "correct survey name"
+    assert r.json()["name"] == "correct survey name"
 
 def test_create_survey_unauthorised():
     client = TestClient(app)
@@ -32,8 +31,8 @@ def test_create_survey_unauthorised():
             "name": "correct survey name"
         }
     )
-    assert r.status_code == 400
-    assert r.json()["detail"] == "invalid token"
+    assert r.status_code == 401
+    assert r.json()["detail"] == "Invalid token"
 
 def test_create_survey_with_blank_name():
     client = TestClient(app)

@@ -9,8 +9,11 @@ from fastapi.middleware.cors import CORSMiddleware
 import schemas.user_schema as user_schema
 from utils.database_utils import Base
 import services.user_service as user_service
+import services.survey_service as survey_service
 from utils.database_utils import engine
 import fastapi.security as security
+import schemas.survey_schema as survey_schema
+import models.survey_model as survey_model
 
 Base.metadata.create_all(bind=engine)
 
@@ -141,3 +144,7 @@ async def update_user_first_name(
     return {
         "message": "user has been successfully updated"
     }
+
+@app.get("/surveys/create", response_model=survey_schema.Survey)
+async def create_survey(survey: survey_schema.SurveyCreate, user=Depends(auth_utils.get_current_user), db=Depends(get_db)):
+    return survey_schema.Survey.from_orm(survey_service.create_survey(user=user, db=db, survey=survey))
