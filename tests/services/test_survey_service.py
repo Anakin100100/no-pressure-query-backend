@@ -11,7 +11,7 @@ def test_create_survey_correctly():
     db = SessionLocal()
     survey = survey_schema.SurveyCreate(name="test survey name")
     created_survey = survey_service.create_survey(user=user, db=db, survey=survey)
-    assert db.query(survey_model.Survey).filter(survey_model.Survey.id == created_survey).first().name == "test survey name"
+    assert db.query(survey_model.Survey).filter(survey_model.Survey.id == created_survey.id).first().name == "test survey name"
 
 def test_create_survey_with_blank_name():
     user = testing_utils.create_user()
