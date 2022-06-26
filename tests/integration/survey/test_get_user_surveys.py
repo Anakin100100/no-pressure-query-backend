@@ -49,7 +49,7 @@ def test_get_user_surveys_one_survey_unathenticated():
     user = testing_utils.create_user()
     db = SessionLocal()
     survey_create = SurveyCreate(name="test")
-    survey = survey_service.create_survey(user=user, db=db, survey=survey_create)
+    _ = survey_service.create_survey(user=user, db=db, survey=survey_create)
     r = client.get("/surveys/get_user_surveys",
         headers={
             "Authorization": "Bearer incorrect_token"
