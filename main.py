@@ -148,3 +148,4 @@ async def update_user_first_name(
 @app.post("/surveys/create", response_model=survey_schema.Survey)
 async def create_survey(survey: survey_schema.SurveyCreate, user=Depends(auth_utils.get_current_user), db=Depends(get_db)):
     return survey_schema.Survey.from_orm(survey_service.create_survey(user=user, db=db, survey=survey))
+
