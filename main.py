@@ -13,7 +13,6 @@ import services.survey_service as survey_service
 from utils.database_utils import engine
 import fastapi.security as security
 import schemas.survey_schema as survey_schema
-import models.survey_model as survey_model
 from typing import List
 
 Base.metadata.create_all(bind=engine)
@@ -153,4 +152,3 @@ async def create_survey(survey: survey_schema.SurveyCreate, user=Depends(auth_ut
 @app.get("/surveys/get_user_surveys", response_model=List[survey_schema.Survey])
 async def get_user_surveys(user=Depends(auth_utils.get_current_user), db=Depends(get_db)):
     return [survey_schema.Survey.from_orm(survey) for survey in survey_service.get_user_surveys(user=user, db=db)]
-    
