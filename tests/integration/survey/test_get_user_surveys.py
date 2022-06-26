@@ -38,11 +38,14 @@ def test_get_user_surveys_multiple_surveys():
     response = r.json()
     assert len(r.json()) == 3   
     for i in range(iter):
+        found = False
         for j in range(iter):
-            if response[i]["name"] == survey_create_list[j]:
+            if response[i]["name"] == survey_create_list[j].name:
+                found = True
                 break 
-        joined_expected_survey_name = " and ".join([s.name for s in survey_create_list])
-        raise Exception(f"The survey with name {survey_create_list[j]} was not found among {joined_expected_survey_name}")
+        if found == False:
+            joined_expected_survey_name = " and ".join([s.name for s in survey_create_list])
+            raise Exception(f"The survey with name {survey_create_list[j].name} was not found among {joined_expected_survey_name}")
 
 def test_get_user_surveys_one_survey_unathenticated():
     client = TestClient(app)
