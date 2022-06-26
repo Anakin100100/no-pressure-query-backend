@@ -35,7 +35,7 @@ def test_user_surveys_with_multiple_surveys():
     user = testing_utils.create_user()
     db = SessionLocal()
     survey = survey_schema.SurveyCreate(name="test")
-    for n in range(3):
+    for _ in range(3):
         survey_service.create_survey(user=user, db=db, survey=survey)
     user_surveys = survey_service.get_user_surveys(user=user, db=db)
     assert len(user_surveys) == 3
