@@ -1,9 +1,14 @@
 import sys
 
+from schemas import user_schema
+
 sys.path.append("../no-pressure-query-backend")
 
 from main import app
 from fastapi.testclient import TestClient
+from sqlalchemy.orm import Session
+import schemas.survey_schema as survey_schema
+import services.survey_service as survey_service
 
 import uuid
 import models.user_model as user_model
@@ -30,3 +35,8 @@ def get_token(user: user_model.User, password: str = "test_password") -> str:
     )
     response = r.json()
     return response["access_token"]
+
+
+def create_survey(user: user_schema.User, db: Session, name: str="Test"):
+    survey = survey_schema.SurveyCreate(name=name)
+    return survey_service.create_survey(user=user, db=db, survey=survey)
