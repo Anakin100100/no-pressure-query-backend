@@ -17,3 +17,7 @@ def create_survey(user: user_schema.User, db: Session, survey: survey_schema.Sur
 
 def get_user_surveys(user: user_schema.User, db: Session) -> List[survey_model.Survey]:
     return db.query(survey_model.Survey).filter(survey_model.Survey.user_id == user.id).all()
+
+
+def get_survey(survey_id: int, db: Session) -> survey_model.Survey:
+    return db.query(survey_model.Survey).filter(survey_model.Survey.id == survey_id).first()
